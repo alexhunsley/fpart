@@ -85,7 +85,7 @@ version(void)
 static void
 usage(void)
 {
-    fprintf(stderr, "Usage: fpart [OPTIONS] -n num | -f files | -s size "
+    fprintf(stderr, "Usage: fparty [OPTIONS] -n num | -f files | -s size "
         "[FILE or DIR...]\n");
     fprintf(stderr, "Sort and pack files into partitions.\n");
     fprintf(stderr, "\n");
@@ -704,7 +704,7 @@ int main(int argc, char **argv)
         /* create a fixed-size array of pointers to sort */
         struct file_entry **file_entry_p = NULL;
 
-        if_not_malloc(file_entry_p, sizeof(struct file_entry *) * totalfiles,
+        if_not_malloc(file_entry_p, sizeof(struct file_entry *) * totalfiles, //totalfiles is num files scanned, NOT the -n parameter!
             uninit_file_entries(head, &options);
             uninit_options(&options);
             exit(EXIT_FAILURE);
@@ -719,7 +719,7 @@ int main(int argc, char **argv)
     
         /* create a double_linked list of partitions
            which will hold dispatched files */
-        if(add_partitions(&part_head, options.num_parts, &options) != 0) {
+        if(add_partitions(&part_head, options.num_parts + 1, &options) != 0) {
             fprintf(stderr, "%s(): cannot init list of partitions\n",
                 __func__);
             uninit_partitions(part_head);

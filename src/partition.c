@@ -108,8 +108,11 @@ find_smallest_partition_index(struct partition *head)
 {
     assert(head != NULL);
 
-    /* be sure to start at first partition */
+    /* rewind to partition 0 */
     rewind_list(head);
+
+    /* advance to partition index 1 (index 0 is for files that are too large for -s mode) */
+    head = head->nextp;
 
     /* start values */
     fsize_t smallest_partition_value = head->size;

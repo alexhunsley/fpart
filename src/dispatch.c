@@ -129,6 +129,9 @@ dispatch_empty_file_entries(struct file_entry *head, fnum_t num_entries,
        any information, but just skip a few file entries */
     rewind_list(part_head);
 
+    /* advance to partition index 1 (index 0 is for files that are too large for -s mode) */
+    head = head->nextp;
+
     /* for each empty file, associate it with the first partition
        having less files than mean_files */
     while(head != NULL) {
@@ -177,8 +180,8 @@ dispatch_empty_file_entries(struct file_entry *head, fnum_t num_entries,
    on-the-fly, with respect to max_entries (maximum files per partitions)
    and max_size (max partition size)
    - must be called with *part_head == NULL (will create partitions)
-   - if max_size > 0, partition 0 will hold files that cannot be held by other
-     partitions
+   - partition 0 will hold files that cannot be held by other partitions
+       (if we don't have a max partition size, partition 0 will always be empty)
    - returns the number of parts created with part_head set to the last
      element */
 pnum_t
@@ -193,16 +196,15 @@ dispatch_file_entries_by_limits(struct file_entry *head,
 
     /* number of partitions created, our return value */
     pnum_t num_parts_created = 0;
-
+//here
     /* when max_size is used, create a default partition (partition 0) 
        that will hold files that does not match criteria */
-    if(max_size > 0) {
-        if(add_partitions(part_head, 1, options) != 0) {
-            fprintf(stderr, "%s(): cannot init default partition\n", __func__);
-            return (num_parts_created);
-        }
-        num_parts_created++;
+    if(add_partitions(part_head, 1, options) != 0) {
+        fprintf(stderr, "%s(): cannot init default partition\n", __func__);
+        return (num_parts_created);
     }
+    num_parts_created++;
+
     struct partition *default_partition = *part_head;
     pnum_t default_partition_index = 0;
 
