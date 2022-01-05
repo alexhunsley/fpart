@@ -1,0 +1,4 @@
+In -n mode:
+
+* we need to make files go into partition 1 onwards (in 0 currently)
+* we are not generating all partition output files, missing the last one
